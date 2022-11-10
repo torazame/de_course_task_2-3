@@ -1,0 +1,84 @@
+-- Active: 1668025010652@@127.0.0.1@5432@sprint1t@public
+
+-- 6
+
+-- Уникальный номер сотрудника, его ФИО и стаж работы – для всех сотрудников компании
+SELECT emp_id, first_name, last_name, (CURRENT_DATE - employment_start) / 365 AS work_period_yrs
+FROM employees;
+
+
+--  Уникальный номер сотрудника, его ФИО и стаж работы – только первых 3-х сотрудников
+SELECT emp_id, first_name, last_name, (CURRENT_DATE - employment_start) / 365 AS work_period_yrs
+FROM employees
+LIMIT 3;
+
+
+-- Уникальный номер сотрудников - водителей
+SELECT emp_id
+FROM employees
+WHERE driving_licence IS TRUE;
+
+
+-- Выведите номера сотрудников, которые хотя бы за 1 квартал получили оценку D или E
+SELECT DISTINCT e.emp_id 
+FROM employees e 
+JOIN bonuses b 
+ON e.emp_id = b.emp_id 
+WHERE b.result > 'C';
+
+
+-- Выведите самую высокую зарплату в компании.
+SELECT MAX(salary) max_salary
+FROM employees;
+
+
+--  * Выведите название самого крупного отдела
+SELECT dep_name AS biggest_department
+FROM departments
+ORDER BY num_employees DESC
+LIMIT 1;
+
+
+-- * Выведите номера сотрудников от самых опытных до вновь прибывших
+SELECT emp_id, first_name, last_name, (CURRENT_DATE - employment_start) / 365 AS work_period_yrs
+FROM employees 
+ORDER BY 4 DESC;
+
+
+-- * Рассчитайте среднюю зарплату для каждого уровня сотрудников
+SELECT grade, ROUND(AVG(salary), 0) avg_salary 
+FROM employees 
+GROUP BY grade
+ORDER BY 2;
+
+
+/*  * Добавьте столбец с информацией о коэффициенте годовой премии к основной таблице. 
+  Коэффициент рассчитывается по такой схеме: 
+  базовое значение коэффициента – 1, каждая оценка действует на коэффициент так:
+
+    ·         Е – минус 20%
+    ·         D – минус 10%
+    ·         С – без изменений
+    ·         B – плюс 10%
+    ·         A – плюс 20%
+*/
+WITH tmp_tbl AS (
+    SELECT *,
+        CASE result
+  			WHEN 'A' THEN 0.2
+  			WHEN 'B' THEN 0.1
+  			WHEN 'C' THEN 0
+  			WHEN 'D' THEN -0.1
+  			WHEN 'E' THEN -0.2
+        END AS performance_coef
+    FROM bonuses
+),
+    tmp_tbl2 AS (
+        SELECT emp_id, SUM(performance_coef) + 1 AS yearly_bonus_coef
+        FROM tmp_tbl
+        GROUP BY emp_id
+    )
+SELECT e.*, t.yearly_bonus_coef 
+FROM employees e
+LEFT JOIN tmp_tbl2 t 
+ON e.emp_id = t.emp_id;

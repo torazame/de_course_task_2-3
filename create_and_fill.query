@@ -1,0 +1,115 @@
+-- Active: 1668025010652@@127.0.0.1@5432@sprint1t@public
+-- 1
+
+-- Таблица с сотрудниками
+CREATE TABLE IF NOT EXISTS employees (
+    emp_id SERIAL NOT NULL PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(60) NOT NULL,
+    birthday DATE,
+    employment_start DATE NOT NULL,
+    position VARCHAR(20) NOT NULL,
+    grade VARCHAR(15) NOT NULL,
+    salary INTEGER NOT NULL,
+    dep_id INTEGER NOT NULL,
+    driving_licence BOOLEAN
+);
+
+-- 2
+-- Таблица с отделами
+CREATE TABLE departments (
+    dep_id INTEGER PRIMARY KEY,
+    dep_name VARCHAR(50) NOT NULL,
+    manager VARCHAR(120) NOT NULL,
+    num_employees INTEGER NOT NULL
+);
+
+-- 3
+-- Таблица с данными о премиях
+CREATE TABLE bonuses (
+    bon_id SERIAL PRIMARY KEY,
+    emp_id INTEGER NOT NULL,
+    quarter INTEGER NOT NULL,
+    result CHAR NOT NULL
+);
+
+-- 4
+-- Заполнение таблицы с сотрудниками
+INSERT INTO employees (first_name, last_name, birthday, employment_start, position,
+                        grade, salary, dep_id, driving_licence)
+VALUES ('Вениамин', 'Дровосеков', '1990-05-23', '2018-08-22', 'Сис. админ.', 'JUN', 40200, 1, TRUE), 
+        ('Александр', 'Македонский', '1975-05-11', '2010-01-05', 'Рук. отдела', 'MID', 145000, 1, TRUE),
+        ('Жак', 'Ширак', '1964-09-13', '2005-07-22', 'Директор', 'LEAD', 250800, 1, FALSE),
+        ('Маргарита', 'Белкина', '1988-02-28', '2013-03-10', 'Главный бухгалтер', 'SEN', 200100, 2, TRUE),
+        ('Антонина', 'Лонгина', '1992-04-21', '2017-06-18', 'Бухгалтер', 'SEN', 78540, 2, TRUE),
+        ('Борис', 'Джонсон', '1984-10-10', '2019-03-19', 'Электрик', 'MID', 44000, 3, FALSE),
+        ('Евгений', 'Старожилов', '1982-11-11', '2016-03-02', 'Рук. отдела', 'SEN', 157330, 3, TRUE),
+        ('Марта', 'Конфоркина', '1987-12-31', '2014-11-29', 'Программист', 'SEN', 178900, 1, TRUE),
+        ('Исигуро', 'Танака', '1983-10-11', '2020-01-21', 'Программист', 'MID', 99999, 1, FALSE),
+        ('Шон', 'Корнишон', '1988-05-24', '2012-09-15', 'Охранник', 'JUN', 28900, 3, TRUE);
+
+
+-- Заполнение таблицы с отделами
+INSERT INTO departments (dep_id, dep_name, manager, num_employees)
+VALUES (1, 'Отдел разработки', 'Жак Ширак', 5),
+        (2, 'Бухгалтерия', 'Маргарита Белкина', 2),
+        (3, 'Отдел обеспечения', 'Евгений Старожилов', 3);
+
+
+-- Заполнение таблицы с премиями
+INSERT INTO bonuses (emp_id, quarter, result)
+VALUES (1, 1, 'B'), 
+        (2, 1, 'A'), 
+        (3, 1, 'B'), 
+        (4, 1, 'C'), 
+        (5, 1, 'D'), 
+        (6, 1, 'B'), 
+        (7, 1, 'A'), 
+        (8, 1, 'E'), 
+        (9, 1, 'B'), 
+        (10, 1, 'A'), 
+        (1, 2, 'A'), 
+        (2, 2, 'A'), 
+        (3, 2, 'C'), 
+        (4, 2, 'B'), 
+        (5, 2, 'B'), 
+        (6, 2, 'A'), 
+        (7, 2, 'A'), 
+        (8, 2, 'D'), 
+        (9, 2, 'C'), 
+        (10, 2, 'B'),
+        (1, 3, 'A'), 
+        (2, 3, 'B'), 
+        (3, 3, 'B'), 
+        (4, 3, 'E'), 
+        (5, 3, 'B'), 
+        (6, 3, 'A'), 
+        (7, 3, 'B'), 
+        (8, 3, 'B'), 
+        (9, 3, 'C'), 
+        (10, 3, 'C'),
+        (1, 4, 'A'), 
+        (2, 4, 'A'), 
+        (3, 4, 'C'), 
+        (4, 4, 'B'), 
+        (5, 4, 'E'), 
+        (6, 4, 'A'), 
+        (7, 4, 'A'), 
+        (8, 4, 'B'), 
+        (9, 4, 'C'), 
+        (10, 4, 'D');
+
+
+-- 5
+-- Добавление данных в таблицу с отделами
+INSERT INTO departments (dep_id, dep_name, manager, num_employees)
+VALUES (4, 'Отдел Интеллектуального анализа данных', 'Федор Емельяненко', 3);
+
+
+-- Добавление данных в таблицу с сотрудниками
+INSERT INTO employees (first_name, last_name, birthday, employment_start, position,
+                        grade, salary, dep_id, driving_licence)
+VALUES ('Федор', 'Емельяненко', '1979-02-19', '2022-10-01', 'Рул. отдела', 'LEAD', 340900, 4, TRUE), 
+        ('Рой', 'Джонс', '1985-03-06', '2022-10-04', 'Аналитик', 'MID', 138000, 4, TRUE),
+        ('Полад', 'Бюль-бюль Оглы', '1983-12-13', '2022-10-07', 'Аналитик', 'JUN', 40800, 4, FALSE);
+ 
